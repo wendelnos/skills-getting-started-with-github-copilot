@@ -6,6 +6,7 @@ on:
       - "accelerate-with-copilot"
     paths:
       - "src/static/**"
+      - ".github/workflows/3-step.yml"
 
 permissions:
   contents: read
@@ -31,6 +32,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Get response templates
         uses: actions/checkout@v5
@@ -58,11 +61,18 @@ jobs:
 
       # START: Check practical exercise
 
+      - name: Find branch merge base
+        id: merge-base
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          echo "sha=$(git merge-base "origin/$DEFAULT_BRANCH" "$GITHUB_SHA")" >> "$GITHUB_OUTPUT"
+
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v47
         with:
-          base_sha: ${{ github.event.repository.default_branch }}
+          base_sha: ${{ steps.merge-base.outputs.sha }}
           files: |
             src/static/app.js
             src/static/styles.css

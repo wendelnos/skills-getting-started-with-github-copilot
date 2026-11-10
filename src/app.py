@@ -21,23 +21,59 @@ app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
 
 # In-memory activity database
 activities = {
-    "Chess Club": {
-        "description": "Learn strategies and compete in chess tournaments",
-        "schedule": "Fridays, 3:30 PM - 5:00 PM",
+    "Clube de Xadrez": {
+        "description": "Aprenda estratégias e participe de torneios de xadrez",
+        "schedule": "Sextas-feiras, 15h30 - 17h",
         "max_participants": 12,
         "participants": ["michael@mergington.edu", "daniel@mergington.edu"]
     },
-    "Programming Class": {
-        "description": "Learn programming fundamentals and build software projects",
-        "schedule": "Tuesdays and Thursdays, 3:30 PM - 4:30 PM",
+    "Aula de Programação": {
+        "description": "Aprenda os fundamentos da programação e desenvolva projetos de software",
+        "schedule": "Terças e quintas-feiras, 15h30 - 16h30",
         "max_participants": 20,
         "participants": ["emma@mergington.edu", "sophia@mergington.edu"]
     },
-    "Gym Class": {
-        "description": "Physical education and sports activities",
-        "schedule": "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
+    "Aula de Educação Física": {
+        "description": "Atividades de educação física e esportes",
+        "schedule": "Segundas, quartas e sextas-feiras, 14h - 15h",
         "max_participants": 30,
         "participants": ["john@mergington.edu", "olivia@mergington.edu"]
+    },
+    "Time de Basquete": {
+        "description": "Pratique habilidades de basquete e dispute partidas em equipe",
+        "schedule": "Terças e quintas-feiras, 16h - 17h30",
+        "max_participants": 15,
+        "participants": []
+    },
+    "Clube de Futebol": {
+        "description": "Desenvolva suas habilidades no futebol e jogue partidas amistosas",
+        "schedule": "Segundas e quartas-feiras, 15h30 - 17h",
+        "max_participants": 22,
+        "participants": []
+    },
+    "Clube de Teatro": {
+        "description": "Atue, ensaie e produza peças teatrais da escola",
+        "schedule": "Quartas-feiras, 15h30 - 17h",
+        "max_participants": 20,
+        "participants": []
+    },
+    "Clube de Arte": {
+        "description": "Explore o desenho, a pintura e outras artes visuais",
+        "schedule": "Sextas-feiras, 15h30 - 17h",
+        "max_participants": 18,
+        "participants": []
+    },
+    "Clube de Debate": {
+        "description": "Pratique oratória, argumentação e pensamento crítico",
+        "schedule": "Terças-feiras, 15h30 - 16h30",
+        "max_participants": 16,
+        "participants": []
+    },
+    "Clube de Ciências": {
+        "description": "Explore ideias científicas por meio de experimentos e projetos",
+        "schedule": "Quintas-feiras, 15h30 - 16h30",
+        "max_participants": 16,
+        "participants": []
     }
 }
 
@@ -64,6 +100,9 @@ def signup_for_activity(activity_name: str, email: str):
     activity = activities[activity_name]
 
     # Add student
+    if email in activity["participants"]:
+        raise HTTPException(status_code=400, detail="Student already signed up for this activity")
+
     activity["participants"].append(email)
     return {"message": f"Signed up {email} for {activity_name}"}
 
